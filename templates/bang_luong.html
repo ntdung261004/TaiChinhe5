@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}Bảng lương hàng tháng{% endblock %}
+{% block page_title %}Quản lý Quỹ lương{% endblock %}
+
+{% block content %}
+<div class="h-full relative">
+
+    <!-- ================= GIAO DIỆN CHỌN NĂM (Hiển thị đầu tiên) ================= -->
+    <div id="yearView" class="transition-all duration-500 transform scale-100 opacity-100">
+        <h3 class="text-slate-500 font-bold tracking-wider uppercase text-sm mb-6">Chọn năm ngân sách</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Thẻ Năm 2026 -->
+            <div onclick="showMonths()" class="group relative bg-white rounded-[2rem] p-8 border-2 border-transparent hover:border-emerald-400 shadow-sm hover:shadow-2xl hover:-translate-y-2 cursor-pointer transition-all duration-300 overflow-hidden">
+                <!-- Icon in chìm trang trí -->
+                <i class="fa-regular fa-calendar absolute -bottom-6 -right-6 text-9xl text-slate-50 group-hover:text-emerald-50 transition-colors -rotate-12"></i>
+                
+                <div class="relative z-10 flex flex-col h-full">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white shadow-lg mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-calendar-days text-2xl"></i>
+                    </div>
+                    <h2 class="text-4xl font-extrabold text-slate-800 mb-2">Năm 2026</h2>
+                    <p class="text-slate-500 font-medium mb-8">Năm ngân sách hiện tại</p>
+                    
+                    <div class="mt-auto pt-6 border-t border-slate-100 flex justify-between items-center">
+                        <div>
+                            <p class="text-xs text-slate-400 font-bold uppercase">Tổng quỹ đã chi</p>
+                            <p class="text-lg font-bold text-emerald-600 mt-1">~ 142.5 Tỷ</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-right text-slate-300 group-hover:text-emerald-500 transition-colors text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thẻ Năm 2025 (Dữ liệu cũ) -->
+            <div class="group relative bg-slate-50 rounded-[2rem] p-8 border border-slate-200 hover:border-slate-300 hover:shadow-lg cursor-pointer transition-all duration-300 overflow-hidden opacity-70 hover:opacity-100">
+                <div class="relative z-10 flex flex-col h-full opacity-60 group-hover:opacity-100 transition-opacity">
+                    <div class="w-16 h-16 rounded-2xl bg-slate-200 flex items-center justify-center text-slate-500 mb-6">
+                        <i class="fa-solid fa-box-archive text-2xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-slate-600 mb-2">Năm 2025</h2>
+                    <p class="text-slate-400 font-medium mb-8">Đã quyết toán xong</p>
+                    <div class="mt-auto pt-6 border-t border-slate-200 flex justify-between items-center">
+                        <i class="fa-solid fa-lock text-slate-400"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= GIAO DIỆN 12 THÁNG (Ẩn ban đầu) ================= -->
+    <div id="monthView" class="absolute inset-0 transition-all duration-500 transform scale-95 opacity-0 pointer-events-none hidden flex flex-col">
+        
+        <!-- Thanh điều hướng quay lại -->
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-4">
+                <button onclick="hideMonths()" class="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-100 hover:text-slate-900 shadow-sm transition-all">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <h3 class="text-2xl font-extrabold text-slate-800">Bảng lương năm 2026</h3>
+            </div>
+            <button class="px-5 py-2.5 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 shadow-md shadow-emerald-600/20 transition-all text-sm gap-2">
+                <i class="fa-solid fa-plus"></i> Tạo bảng lương mới
+            </button>
+        </div>
+
+        <!-- Lưới 12 thẻ tháng -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pb-10">
+            
+            <!-- Tháng đã chốt (Tháng 1 đến Tháng 9) -->
+            {% for i in range(1, 10) %}
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 hover:border-emerald-300 hover:shadow-xl cursor-pointer transition-all hover:-translate-y-1 group">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-600 font-black text-xl group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-colors">
+                        T{{ i }}
+                    </div>
+                    <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-md text-[10px] font-bold uppercase tracking-wider border border-emerald-100">Đã duyệt</span>
+                </div>
+                <h4 class="text-lg font-bold text-slate-800 mb-1">Tháng {{ i }}/2026</h4>
+                <p class="text-slate-500 text-sm font-medium mb-4">Quân số: 1,24{{ i }}</p>
+                <div class="pt-4 border-t border-slate-100 flex justify-between items-center">
+                    <span class="text-sm font-bold text-slate-700">15.{{ i }} Tỷ</span>
+                    <i class="fa-solid fa-file-invoice text-slate-300 group-hover:text-emerald-500"></i>
+                </div>
+            </div>
+            {% endfor %}
+
+            <!-- Tháng hiện tại (Tháng 10 - Đang xử lý) -->
+            <div class="bg-gradient-to-b from-white to-amber-50 rounded-2xl p-6 border-2 border-amber-300 hover:shadow-xl cursor-pointer transition-all hover:-translate-y-1 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-16 h-16 bg-amber-400 rounded-bl-full flex items-start justify-end p-3">
+                    <i class="fa-solid fa-star text-white text-xs"></i>
+                </div>
+                <div class="flex justify-between items-start mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center text-amber-700 font-black text-xl">
+                        T10
+                    </div>
+                    <span class="px-2.5 py-1 bg-amber-100 text-amber-800 rounded-md text-[10px] font-bold uppercase tracking-wider relative z-10 animate-pulse">Đang làm</span>
+                </div>
+                <h4 class="text-lg font-bold text-slate-800 mb-1">Tháng 10/2026</h4>
+                <p class="text-slate-500 text-sm font-medium mb-4">Quân số: 1,245</p>
+                <div class="pt-4 border-t border-amber-200/50 flex justify-between items-center">
+                    <span class="text-sm font-bold text-amber-700">Dự toán...</span>
+                    <i class="fa-solid fa-pen-to-square text-amber-500"></i>
+                </div>
+            </div>
+
+            <!-- Tháng chưa tới (Tháng 11, 12) -->
+            {% for i in range(11, 13) %}
+            <div class="bg-transparent rounded-2xl p-6 border-2 border-dashed border-slate-300 cursor-not-allowed opacity-60 flex flex-col items-center justify-center text-center min-h-[180px]">
+                <i class="fa-solid fa-lock text-slate-400 text-2xl mb-3"></i>
+                <h4 class="text-base font-bold text-slate-500">Tháng {{ i }}/2026</h4>
+                <p class="text-slate-400 text-xs font-medium mt-1">Chưa mở</p>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+
+<!-- Script xử lý hiệu ứng lật trang -->
+<script>
+    function showMonths() {
+        const yearView = document.getElementById('yearView');
+        const monthView = document.getElementById('monthView');
+        
+        // Ẩn bảng Năm
+        yearView.classList.remove('scale-100', 'opacity-100');
+        yearView.classList.add('scale-95', 'opacity-0');
+        
+        // Timeout đợi hiệu ứng ẩn xong
+        setTimeout(() => {
+            yearView.classList.add('hidden');
+            
+            // Hiển thị bảng Tháng
+            monthView.classList.remove('hidden');
+            // Cần một frame nhỏ để trình duyệt render class bỏ hidden trước khi add class hiển thị
+            requestAnimationFrame(() => {
+                monthView.classList.remove('pointer-events-none', 'scale-95', 'opacity-0');
+                monthView.classList.add('scale-100', 'opacity-100');
+            });
+        }, 300);
+    }
+
+    function hideMonths() {
+        const yearView = document.getElementById('yearView');
+        const monthView = document.getElementById('monthView');
+        
+        // Ẩn bảng Tháng
+        monthView.classList.remove('scale-100', 'opacity-100');
+        monthView.classList.add('scale-95', 'opacity-0', 'pointer-events-none');
+        
+        setTimeout(() => {
+            monthView.classList.add('hidden');
+            
+            yearView.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                yearView.classList.remove('scale-95', 'opacity-0');
+                yearView.classList.add('scale-100', 'opacity-100');
+            });
+        }, 300);
+    }
+</script>
+{% endblock %}

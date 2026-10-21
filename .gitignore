@@ -1,0 +1,24 @@
+# 1. Môi trường ảo Python (Nặng và chứa hàng ngàn file thư viện)
+venv/
+env/
+.env
+
+# 2. File Cache và biên dịch của Python (Rác hệ thống)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 3. Cơ sở dữ liệu SQLite (Rất quan trọng: Không đẩy dữ liệu quân nhân lên mạng)
+*.db
+*.sqlite
+*.sqlite3
+database/
+
+# 4. File cấu hình của Editor/IDE (Tránh xung đột giữa các máy)
+.vscode/
+.idea/
+
+# 5. File rác của hệ điều hành macOS và Windows
+.DS_Store
+Thumbs.db

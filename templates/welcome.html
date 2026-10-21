@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khởi động | Tài chính Trung đoàn 5</title>
+    
+    <script src="{{ url_for('static', filename='vendor/tailwind.js') }}"></script>
+    <link href="{{ url_for('static', filename='vendor/fontawesome/css/all.min.css') }}" rel="stylesheet">
+    
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #ffffff;
+        }
+        .watermark-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background-image: url("{{ url_for('static', filename='img/trong-dong.png') }}");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 45%; 
+            opacity: 0.45; /* Tăng độ đậm của nền chìm lên 15% */
+            pointer-events: none; 
+        }
+    </style>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { emerald: { 500: '#10b981', 600: '#059669', 700: '#047857', 800: '#065f46' } }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="h-screen flex flex-col text-slate-800 overflow-hidden relative selection:bg-emerald-500 selection:text-white">
+
+    <div class="watermark-bg"></div>
+
+    <div class="relative z-10 w-full h-full flex flex-col">
+        
+        <div class="w-full flex flex-col items-center pt-16 md:pt-1 px-6 text-center">
+            <!-- Logo kéo sát dòng chữ bên dưới (mb-2) -->
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo Đơn Vị" class="w-30 h-30 md:w-24 md:h-24 object-contain mb-1 drop-shadow-sm hover:scale-105 transition-transform duration-300">
+            
+            <!-- Chữ Tài chính E5 to hơn (text-lg/xl) -->
+            <h2 class="text-emerald-800 font-bold tracking-widest uppercase mb-6 text-lg md:text-l">
+                Tài chính Trung đoàn 5
+            </h2>
+            
+            <!-- Tiêu đề 2 dòng, 2 màu, 2 kích thước -->
+            <h1 class="leading-tight tracking-tight">
+                <span class="block text-2xl md:text-3xl font-extrabold text-slate-700 mb-2">
+                    Phần mềm số hóa
+                </span>
+                <span class="block text-4xl md:text-5xl font-black text-emerald-600 uppercase drop-shadow-sm">
+                    Công tác tài chính
+                </span>
+            </h1>
+        </div>
+
+        <div class="flex-1 flex items-center justify-center">
+            <a href="/dashboard" class="group relative inline-flex items-center justify-center px-10 py-4 font-bold text-white transition-all duration-300 bg-emerald-600 rounded-lg hover:bg-emerald-700 hover:shadow-lg shadow-emerald-600/30 hover:-translate-y-1">
+                <span class="mr-2 text-base tracking-wide">Bắt đầu</span>
+                <i class="fa-solid fa-arrow-right transition-transform duration-300 group-hover:translate-x-1 text-base"></i>
+            </a>
+        </div>
+
+        <div class="w-full pb-6 flex justify-center">
+            <span class="text-slate-500 text-xs font-semibold tracking-wide">Phiên bản 1.0</span>
+        </div>
+
+    </div>
+
+</body>
+</html>
