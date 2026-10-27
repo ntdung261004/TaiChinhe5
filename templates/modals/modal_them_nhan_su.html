@@ -1,0 +1,114 @@
+<!-- Khung Modal Thêm Mới Hồ Sơ -->
+<div id="modalAddNew" class="fixed inset-0 z-[100] hidden">
+    <!-- Nền kính mờ -->
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity opacity-0" id="modalBackdrop"></div>
+    
+    <!-- Khung Modal -->
+    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+        <div id="modalPanel" class="relative bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:max-w-3xl w-full opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95 border border-slate-200">
+            
+            <!-- Header Modal -->
+            <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-user-plus text-emerald-600"></i> Thêm mới Hồ sơ Quân nhân
+                </h3>
+                <button id="btnCloseModal" class="text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg p-2 transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Body Modal (Form) -->
+            <div class="px-6 py-6 bg-white max-h-[70vh] overflow-y-auto">
+                <form id="formAddNew">
+                    
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">1. Thông tin cá nhân</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Họ và Tên <span class="text-rose-500">*</span></label>
+                            <input type="text" placeholder="VD: Nguyễn Văn A" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all text-sm font-medium text-slate-800">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Số hiệu quân nhân <span class="text-rose-500">*</span></label>
+                            <input type="text" placeholder="VD: SQ-012345" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all text-sm font-medium text-slate-800 uppercase">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Tháng năm nhập ngũ</label>
+                            <input type="month" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all text-sm font-medium text-slate-800">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Cấp bậc</label>
+                            <select class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all text-sm font-medium text-slate-800">
+                                <option value="">-- Chọn cấp bậc --</option>
+                                <optgroup label="Sĩ quan">
+                                    <option value="Thượng tá">Thượng tá</option>
+                                    <option value="Trung tá">Trung tá</option>
+                                    <option value="Thiếu tá">Thiếu tá</option>
+                                    <option value="Đại úy">Đại úy</option>
+                                    <option value="Thượng úy">Thượng úy</option>
+                                    <option value="Trung úy">Trung úy</option>
+                                    <option value="Thiếu úy">Thiếu úy</option>
+                                </optgroup>
+                                <optgroup label="Quân nhân chuyên nghiệp">
+                                    <option value="Thượng úy QNCN">Thượng úy QNCN</option>
+                                    <option value="Trung úy QNCN">Trung úy QNCN</option>
+                                    <option value="Thiếu úy QNCN">Thiếu úy QNCN</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">2. Đơn vị & Chức vụ</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+                        <!-- Cấp quản lý (Dùng để lọc chức vụ) -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Cấp đơn vị (Phân cấp chức vụ)</label>
+                            <select id="selectCapDonVi" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all text-sm font-medium text-slate-800">
+                                <option value="">-- Chọn phân cấp --</option>
+                                <option value="trung_doan">Khối Cơ quan / Cấp Trung đoàn</option>
+                                <option value="tieu_doan">Cán bộ cấp Tiểu đoàn</option>
+                                <option value="dai_doi">Cán bộ cấp Đại đội</option>
+                                <option value="trung_doi">Cán bộ cấp Trung đội</option>
+                            </select>
+                        </div>
+                        <!-- Chức vụ (Được JS tự động điền) -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Chức vụ cụ thể <span class="text-rose-500">*</span></label>
+                            <select id="selectChucVu" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all text-sm font-medium text-slate-800 disabled:bg-slate-100 disabled:text-slate-400" disabled>
+                                <option value="">Vui lòng chọn cấp đơn vị trước</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">3. Thông tin Tài chính</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="relative">
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Số tài khoản MB Bank</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <i class="fa-solid fa-building-columns text-slate-400"></i>
+                                </div>
+                                <input type="text" placeholder="Nhập STK MB Bank..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all text-sm font-medium text-slate-800">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Số người phụ thuộc (Tính thuế)</label>
+                            <input type="number" min="0" value="0" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all text-sm font-medium text-slate-800">
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- Footer Modal -->
+            <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex justify-end gap-3 rounded-b-2xl">
+                <button id="btnCancelModal" class="px-5 py-2.5 bg-white border border-slate-200 text-slate-600 font-semibold rounded-xl hover:bg-slate-50 transition-all text-sm">
+                    Hủy bỏ
+                </button>
+                <button class="px-6 py-2.5 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 shadow-md shadow-emerald-600/20 transition-all text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-save"></i> Lưu hồ sơ
+                </button>
+            </div>
+            
+        </div>
+    </div>
+</div>

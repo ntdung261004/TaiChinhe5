@@ -6,148 +6,88 @@
 {% block content %}
 <div class="flex flex-col h-full gap-6">
     
-    <!-- Thanh công cụ (Toolbar): Tabs, Tìm kiếm, Lọc, Thêm mới -->
+    <div class="flex items-center justify-between mb-2">
+        <h2 class="text-xl font-bold text-slate-800">Hồ sơ Quản lý <span class="text-sm font-medium text-slate-500 ml-2">(Tổng quân số hưởng lương: {{ tong_so }})</span></h2>
+    </div>
+
     <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
         
-        <!-- Tabs 3 mục (Segmented Control) -->
         <div class="inline-flex bg-slate-200/60 p-1 rounded-xl">
-            <button class="px-6 py-2.5 bg-white text-emerald-700 font-bold rounded-lg shadow-sm text-sm transition-all">
-                Tất cả <span class="ml-1 px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-full text-xs">1,245</span>
+            <button class="px-6 py-2 bg-white text-emerald-700 font-bold rounded-lg shadow-sm text-sm transition-all">
+                Sĩ quan <span class="ml-1 px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-full text-xs">{{ tong_sq }}</span>
             </button>
-            <button class="px-6 py-2.5 text-slate-500 font-semibold hover:text-slate-800 rounded-lg text-sm transition-all">
-                Sĩ quan <span class="ml-1 px-2 py-0.5 bg-slate-200 text-slate-600 rounded-full text-xs">340</span>
-            </button>
-            <button class="px-6 py-2.5 text-slate-500 font-semibold hover:text-slate-800 rounded-lg text-sm transition-all">
-                QNCN <span class="ml-1 px-2 py-0.5 bg-slate-200 text-slate-600 rounded-full text-xs">905</span>
+            <button class="px-6 py-2 text-slate-500 font-semibold hover:text-slate-800 rounded-lg text-sm transition-all">
+                QNCN <span class="ml-1 px-2 py-0.5 bg-slate-200 text-slate-600 rounded-full text-xs">{{ tong_qncn }}</span>
             </button>
         </div>
 
-        <!-- Cụm Tìm kiếm & Nút thao tác -->
-        <div class="flex items-center gap-3 w-full lg:w-auto">
-            <!-- Ô tìm kiếm -->
-            <div class="relative group flex-1 lg:w-72">
-                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors"></i>
-                <input type="text" placeholder="Tìm kiếm họ tên, số hiệu..." class="w-full pl-11 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all text-sm font-medium text-slate-700 placeholder-slate-400 shadow-sm">
+        <div class="flex items-center gap-2 w-full lg:w-auto">
+            <div class="relative group flex-1 lg:w-64">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="text" placeholder="Tìm kiếm họ tên..." class="w-full pl-11 pr-4 py-2 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all text-sm font-medium text-slate-700 placeholder-slate-400 shadow-sm">
             </div>
             
-            <!-- Nút Lọc -->
-            <button class="flex items-center justify-center w-11 h-11 bg-white border border-slate-200 rounded-xl text-slate-500 hover:text-emerald-600 hover:border-emerald-300 hover:bg-emerald-50 transition-all shadow-sm group relative" title="Bộ lọc nâng cao">
-                <i class="fa-solid fa-filter"></i>
-                <!-- Chấm đỏ báo hiệu đang có bộ lọc (tùy chọn ẩn hiện) -->
-                <span class="absolute top-2 right-2.5 w-2 h-2 bg-rose-500 rounded-full"></span>
-            </button>
+            <form id="formExcelSQ" class="hidden" enctype="multipart/form-data">
+                <input type="file" id="fileExcelSQ" name="fileExcel" accept=".xlsx, .xls">
+            </form>
             
-            <!-- Nút Excel -->
-            <button class="flex items-center justify-center w-11 h-11 bg-white border border-slate-200 rounded-xl text-slate-500 hover:text-emerald-600 hover:border-emerald-300 hover:bg-emerald-50 transition-all shadow-sm" title="Nhập/Xuất Excel">
-                <i class="fa-solid fa-file-excel"></i>
+            <!-- Nút Xóa Tất cả (Màu Đỏ) -->
+            <button id="btnDeleteAll" class="flex items-center justify-center px-4 py-2 bg-white border border-rose-500 text-rose-600 font-semibold rounded-xl hover:bg-rose-50 shadow-sm transition-all text-sm gap-2" title="Xóa toàn bộ CSDL">
+                <i class="fa-solid fa-trash-can"></i> Xóa tất cả
             </button>
 
-            <!-- Nút Thêm mới -->
-            <button id="btnAddNew" class="flex items-center px-5 py-2.5 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 shadow-md shadow-emerald-600/20 transition-all text-sm gap-2">
-                <i class="fa-solid fa-plus"></i> Thêm mới
+            <button id="btnTriggerExcel" class="flex items-center justify-center px-4 py-2 bg-white border border-emerald-500 text-emerald-600 font-semibold rounded-xl hover:bg-emerald-50 shadow-sm transition-all text-sm gap-2" title="Nhập danh sách từ Excel">
+                <i class="fa-solid fa-file-excel"></i> Nhập Excel SQ
+            </button>
+
+            <button id="btnAddNew" class="flex items-center px-4 py-2 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 shadow-md shadow-emerald-600/20 transition-all text-sm gap-2">
+                <i class="fa-solid fa-plus"></i> Thêm thủ công
             </button>
         </div>
     </div>
 
-    <!-- Bảng dữ liệu (Table) -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden relative">
+    <!-- Bảng dữ liệu Thu gọn -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden relative">
         <div class="overflow-x-auto relative max-w-full">
             <table class="w-full text-left border-collapse whitespace-nowrap">
                 <thead>
-                    <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 text-xs uppercase tracking-wider font-bold">
-                        <th class="px-5 py-4 w-12 text-center">STT</th>
-                        
-                        <!-- Cột Họ tên neo cố định bên trái -->
-                        <th class="px-5 py-4 sticky left-0 bg-slate-50 shadow-[1px_0_0_0_#e2e8f0] z-20">Họ và Tên</th>
-                        
-                        <th class="px-5 py-4">Cấp bậc</th>
-                        <th class="px-5 py-4">Chức vụ</th>
-                        <th class="px-5 py-4">Đơn vị</th>
-                        <th class="px-5 py-4 text-center">Tháng năm nhập ngũ</th>
-                        <th class="px-5 py-4 text-center">Số người phụ thuộc</th>
-                        <th class="px-5 py-4 text-center">Trạng thái</th>
-                        
-                        <!-- Cột Thao tác neo cố định bên phải -->
-                        <th class="px-5 py-4 text-right sticky right-0 bg-slate-50 shadow-[-1px_0_0_0_#e2e8f0] z-20">Thao tác</th>
+                    <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 text-[11px] uppercase tracking-wider font-bold">
+                        <th class="px-4 py-3 w-10 text-center">STT</th>
+                        <th class="px-4 py-3 sticky left-0 bg-slate-50 shadow-[1px_0_0_0_#e2e8f0] z-20 min-w-[200px]">Họ và Tên</th>
+                        <th class="px-4 py-3 text-center">Hệ số CB</th>
+                        <th class="px-4 py-3 text-center">Hệ số CV</th>
+                        <th class="px-4 py-3">Đơn vị</th>
+                        <th class="px-4 py-3 text-center">Nhập ngũ</th>
+                        <th class="px-4 py-3 text-center">Trạng thái</th>
+                        <th class="px-4 py-3 text-right sticky right-0 bg-slate-50 shadow-[-1px_0_0_0_#e2e8f0] z-20">Thao tác</th>
                     </tr>
                 </thead>
                 <tbody class="text-sm font-medium text-slate-700 divide-y divide-slate-100">
                     
-                    <!-- Dòng dữ liệu mẫu 1: Sĩ quan -->
+                    {% for sq in ds_sq %}
                     <tr class="hover:bg-slate-50/80 transition-colors group">
-                        <td class="px-5 py-3 text-center text-slate-400">1</td>
+                        <td class="px-4 py-2 text-center text-slate-400 text-xs">{{ loop.index }}</td>
                         
-                        <!-- Dữ liệu Họ tên neo trái (Thêm màu nền để khi cuộn chữ không đè lên nhau) -->
-                        <td class="px-5 py-3 sticky left-0 bg-white group-hover:bg-slate-50 shadow-[1px_0_0_0_#f1f5f9] z-10 transition-colors">
-                            <div class="flex items-center gap-3">
-                                <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm flex-shrink-0">
-                                    N
-                                </div>
-                                <div class="flex flex-col">
-                                    <p class="text-slate-800 font-bold text-base">Nguyễn Văn A</p>
-                                    <p class="text-xs text-slate-500 font-normal mt-0.5">SH: SQ-012345 &bull; STK: 0123456789 (MB)</p>
-                                </div>
+                        <!-- Cột Họ tên (Bỏ Icon, Tên đủ dài) -->
+                        <td class="px-4 py-2 sticky left-0 bg-white group-hover:bg-slate-50 shadow-[1px_0_0_0_#f1f5f9] z-10 transition-colors">
+                            <div class="flex flex-col">
+                                <p class="text-slate-800 font-bold text-sm">{{ sq.ho_ten }}</p>
+                                <p class="text-[11px] text-slate-500 font-normal mt-0.5">STK: {{ sq.so_tai_khoan }}</p>
                             </div>
                         </td>
                         
-                        <td class="px-5 py-3 text-slate-600">Thiếu tá</td>
-                        <td class="px-5 py-3"><span class="px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs font-semibold">Tiểu đoàn trưởng</span></td>
-                        <td class="px-5 py-3 text-slate-600">Tiểu đoàn 1</td>
-                        <td class="px-5 py-3 text-center text-slate-600">02/2005</td>
-                        <td class="px-5 py-3 text-center"><span class="px-2 py-1 bg-amber-50 text-amber-700 border border-amber-200 rounded-md text-xs font-bold">2</span></td>
-                        <td class="px-5 py-3 text-center">
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-bold border border-emerald-200">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Đang công tác
+                        <!-- Dùng "%g" để bỏ số 0 thập phân vô nghĩa (2.0 -> 2, 2.3 -> 2.3) -->
+                        <td class="px-4 py-2 text-center text-slate-600 font-semibold">{{ "%g" % sq.cap_bac_hs }}</td>
+                        <td class="px-4 py-2 text-center"><span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-xs font-bold">{{ "%g" % sq.chuc_vu_hs }}</span></td>
+                        <td class="px-4 py-2 text-slate-600 text-xs">{{ sq.don_vi }}</td>
+                        <td class="px-4 py-2 text-center text-slate-600 text-xs">{{ sq.nhap_ngu }}</td>
+                        <td class="px-4 py-2 text-center">
+                            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full text-[11px] font-bold border border-emerald-200">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> {{ sq.trang_thai }}
                             </span>
                         </td>
                         
-                        <!-- Dữ liệu Thao tác neo phải -->
-                        <td class="px-5 py-3 text-right sticky right-0 bg-white group-hover:bg-slate-50 shadow-[-1px_0_0_0_#f1f5f9] z-10 transition-colors">
-                            <div class="flex justify-end gap-1">
-                                <!-- Nút Xem hồ sơ -->
-                                <button class="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded bg-white border border-slate-100 shadow-sm transition-all" title="Xem hồ sơ">
-                                    <i class="fa-solid fa-eye text-xs w-4"></i>
-                                </button>
-                                <!-- Nút Sửa -->
-                                <button class="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded bg-white border border-slate-100 shadow-sm transition-all" title="Sửa">
-                                    <i class="fa-solid fa-pen text-xs w-4"></i>
-                                </button>
-                                <!-- Nút Xóa -->
-                                <button class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded bg-white border border-slate-100 shadow-sm transition-all" title="Xóa">
-                                    <i class="fa-solid fa-trash-can text-xs w-4"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Dòng dữ liệu mẫu 2: QNCN -->
-                    <tr class="hover:bg-slate-50/80 transition-colors group">
-                        <td class="px-5 py-3 text-center text-slate-400">2</td>
-                        
-                        <td class="px-5 py-3 sticky left-0 bg-white group-hover:bg-slate-50 shadow-[1px_0_0_0_#f1f5f9] z-10 transition-colors">
-                            <div class="flex items-center gap-3">
-                                <div class="w-9 h-9 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-sm flex-shrink-0">
-                                    T
-                                </div>
-                                <div class="flex flex-col">
-                                    <p class="text-slate-800 font-bold text-base">Trần Thị B</p>
-                                    <p class="text-xs text-slate-500 font-normal mt-0.5">SH: QN-987654 &bull; STK: 9876543210 (BIDV)</p>
-                                </div>
-                            </div>
-                        </td>
-                        
-                        <td class="px-5 py-3 text-slate-600">Thượng úy QNCN</td>
-                        <td class="px-5 py-3"><span class="px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs font-semibold">Nhân viên TC</span></td>
-                        <td class="px-5 py-3 text-slate-600">Ban Tài chính</td>
-                        <td class="px-5 py-3 text-center text-slate-600">09/2012</td>
-                        <td class="px-5 py-3 text-center"><span class="px-2 py-1 bg-amber-50 text-amber-700 border border-amber-200 rounded-md text-xs font-bold">1</span></td>
-                        <td class="px-5 py-3 text-center">
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full text-xs font-bold border border-slate-200">
-                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Chuyển đơn vị
-                            </span>
-                        </td>
-                        
-                        <td class="px-5 py-3 text-right sticky right-0 bg-white group-hover:bg-slate-50 shadow-[-1px_0_0_0_#f1f5f9] z-10 transition-colors">
+                        <td class="px-4 py-2 text-right sticky right-0 bg-white group-hover:bg-slate-50 shadow-[-1px_0_0_0_#f1f5f9] z-10 transition-colors">
                             <div class="flex justify-end gap-1">
                                 <button class="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded bg-white border border-slate-100 shadow-sm transition-all" title="Xem hồ sơ">
                                     <i class="fa-solid fa-eye text-xs w-4"></i>
@@ -161,196 +101,21 @@
                             </div>
                         </td>
                     </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="px-5 py-10 text-center text-slate-500">
+                            <i class="fa-solid fa-folder-open text-3xl mb-3 text-slate-300 block"></i>
+                            Chưa có dữ liệu. Vui lòng nhập từ file Excel.
+                        </td>
+                    </tr>
+                    {% endfor %}
 
                 </tbody>
             </table>
         </div>
-</div>
-<!-- ================= MODAL THÊM MỚI ================= -->
-<div id="modalAddNew" class="fixed inset-0 z-[100] hidden">
-    <!-- Nền kính mờ -->
-    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity opacity-0" id="modalBackdrop"></div>
-    
-    <!-- Khung Modal -->
-    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
-        <div id="modalPanel" class="relative bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:max-w-3xl w-full opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95 border border-slate-200">
-            
-            <!-- Header Modal -->
-            <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
-                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-user-plus text-emerald-600"></i> Thêm mới Hồ sơ Quân nhân
-                </h3>
-                <button id="btnCloseModal" class="text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg p-2 transition-colors">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-
-            <!-- Body Modal (Form) -->
-            <div class="px-6 py-6 bg-white max-h-[70vh] overflow-y-auto">
-                <form id="formAddNew">
-                    
-                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">1. Thông tin cá nhân</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
-                        <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-1">Họ và Tên <span class="text-rose-500">*</span></label>
-                            <input type="text" placeholder="VD: Nguyễn Văn A" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all text-sm font-medium text-slate-800">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-1">Số hiệu quân nhân <span class="text-rose-500">*</span></label>
-                            <input type="text" placeholder="VD: SQ-012345" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all text-sm font-medium text-slate-800 uppercase">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-1">Tháng năm nhập ngũ</label>
-                            <input type="month" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all text-sm font-medium text-slate-800">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-1">Cấp bậc</label>
-                            <select class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all text-sm font-medium text-slate-800">
-                                <option value="">-- Chọn cấp bậc --</option>
-                                <optgroup label="Sĩ quan">
-                                    <option value="Thượng tá">Thượng tá</option>
-                                    <option value="Trung tá">Trung tá</option>
-                                    <option value="Thiếu tá">Thiếu tá</option>
-                                    <option value="Đại úy">Đại úy</option>
-                                    <option value="Thượng úy">Thượng úy</option>
-                                    <option value="Trung úy">Trung úy</option>
-                                    <option value="Thiếu úy">Thiếu úy</option>
-                                </optgroup>
-                                <optgroup label="Quân nhân chuyên nghiệp">
-                                    <option value="Thượng úy QNCN">Thượng úy QNCN</option>
-                                    <option value="Trung úy QNCN">Trung úy QNCN</option>
-                                    <option value="Thiếu úy QNCN">Thiếu úy QNCN</option>
-                                </optgroup>
-                            </select>
-                        </div>
-                    </div>
-
-                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">2. Đơn vị & Chức vụ</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
-                        <!-- Cấp quản lý (Dùng để lọc chức vụ) -->
-                        <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-1">Cấp đơn vị (Phân cấp chức vụ)</label>
-                            <select id="selectCapDonVi" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all text-sm font-medium text-slate-800">
-                                <option value="">-- Chọn phân cấp --</option>
-                                <option value="trung_doan">Khối Cơ quan / Cấp Trung đoàn</option>
-                                <option value="tieu_doan">Cán bộ cấp Tiểu đoàn</option>
-                                <option value="dai_doi">Cán bộ cấp Đại đội</option>
-                                <option value="trung_doi">Cán bộ cấp Trung đội</option>
-                            </select>
-                        </div>
-                        <!-- Chức vụ (Được JS tự động điền) -->
-                        <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-1">Chức vụ cụ thể <span class="text-rose-500">*</span></label>
-                            <select id="selectChucVu" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all text-sm font-medium text-slate-800 disabled:bg-slate-100 disabled:text-slate-400" disabled>
-                                <option value="">Vui lòng chọn cấp đơn vị trước</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">3. Thông tin Tài chính</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <div class="relative">
-                            <label class="block text-sm font-semibold text-slate-700 mb-1">Số tài khoản MB Bank</label>
-                            <div class="relative">
-                                <!-- Giả lập icon ngân hàng -->
-                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <i class="fa-solid fa-building-columns text-slate-400"></i>
-                                </div>
-                                <input type="text" placeholder="Nhập STK MB Bank..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all text-sm font-medium text-slate-800">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-1">Số người phụ thuộc (Tính thuế)</label>
-                            <input type="number" min="0" value="0" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all text-sm font-medium text-slate-800">
-                        </div>
-                    </div>
-
-                </form>
-            </div>
-
-            <!-- Footer Modal -->
-            <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex justify-end gap-3 rounded-b-2xl">
-                <button id="btnCancelModal" class="px-5 py-2.5 bg-white border border-slate-200 text-slate-600 font-semibold rounded-xl hover:bg-slate-50 transition-all text-sm">
-                    Hủy bỏ
-                </button>
-                <button class="px-6 py-2.5 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 shadow-md shadow-emerald-600/20 transition-all text-sm flex items-center gap-2">
-                    <i class="fa-solid fa-save"></i> Lưu hồ sơ
-                </button>
-            </div>
-            
-        </div>
     </div>
 </div>
 
-<!-- ================= SCRIPT XỬ LÝ GIAO DIỆN ================= -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // --- 1. XỬ LÝ ẨN/HIỆN MODAL MƯỢT MÀ ---
-        const modal = document.getElementById('modalAddNew');
-        const backdrop = document.getElementById('modalBackdrop');
-        const panel = document.getElementById('modalPanel');
-        
-        const btnOpen = document.getElementById('btnAddNew');
-        const btnClose = document.getElementById('btnCloseModal');
-        const btnCancel = document.getElementById('btnCancelModal');
-
-        function openModal() {
-            modal.classList.remove('hidden');
-            // Timeout nhỏ để CSS Transition kịp chạy
-            setTimeout(() => {
-                backdrop.classList.remove('opacity-0');
-                backdrop.classList.add('opacity-100');
-                panel.classList.remove('opacity-0', 'translate-y-4', 'sm:scale-95');
-                panel.classList.add('opacity-100', 'translate-y-0', 'sm:scale-100');
-            }, 10);
-        }
-
-        function closeModal() {
-            backdrop.classList.remove('opacity-100');
-            backdrop.classList.add('opacity-0');
-            panel.classList.remove('opacity-100', 'translate-y-0', 'sm:scale-100');
-            panel.classList.add('opacity-0', 'translate-y-4', 'sm:scale-95');
-            // Đợi hiệu ứng kết thúc mới ẩn hẳn div
-            setTimeout(() => { modal.classList.add('hidden'); }, 300);
-        }
-
-        btnOpen.addEventListener('click', openModal);
-        btnClose.addEventListener('click', closeModal);
-        btnCancel.addEventListener('click', closeModal);
-
-
-        // --- 2. XỬ LÝ LOGIC "CHỨC VỤ THÔNG MINH" ---
-        const danhMucChucVu = {
-            'trung_doan': ['Trung đoàn trưởng', 'Chính ủy Trung đoàn', 'Phó Trung đoàn trưởng', 'Phó Chính ủy Trung đoàn', 'Chủ nhiệm', 'Trưởng ban', 'Trợ lý (Khối Cơ quan)'],
-            'tieu_doan': ['Tiểu đoàn trưởng', 'Chính trị viên Tiểu đoàn', 'Phó Tiểu đoàn trưởng', 'Chính trị viên phó Tiểu đoàn', 'Trợ lý Tiểu đoàn'],
-            'dai_doi': ['Đại đội trưởng', 'Chính trị viên Đại đội', 'Phó Đại đội trưởng', 'Chính trị viên phó Đại đội'],
-            'trung_doi': ['Trung đội trưởng']
-        };
-
-        const selectCap = document.getElementById('selectCapDonVi');
-        const selectChucVu = document.getElementById('selectChucVu');
-
-        selectCap.addEventListener('change', function() {
-            const cap = this.value;
-            
-            // Xóa các option cũ
-            selectChucVu.innerHTML = '';
-
-            if (cap && danhMucChucVu[cap]) {
-                selectChucVu.disabled = false; // Mở khóa ô chức vụ
-                // Thêm option mặc định
-                selectChucVu.add(new Option('-- Chọn chức vụ cụ thể --', ''));
-                
-                // Thêm các chức vụ thuộc cấp tương ứng
-                danhMucChucVu[cap].forEach(chucVu => {
-                    selectChucVu.add(new Option(chucVu, chucVu));
-                });
-            } else {
-                // Nếu chọn về trống
-                selectChucVu.disabled = true;
-                selectChucVu.add(new Option('Vui lòng chọn cấp đơn vị trước', ''));
-            }
-        });
-    });
-</script>
+{% include 'modals/modal_them_nhan_su.html' %}
+<script src="{{ url_for('static', filename='js/nhan_su.js') }}"></script>
 {% endblock %}
