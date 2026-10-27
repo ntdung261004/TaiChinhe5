@@ -11,7 +11,6 @@
     </div>
 
     <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-        
         <div class="inline-flex bg-slate-200/60 p-1 rounded-xl">
             <button class="px-6 py-2 bg-white text-emerald-700 font-bold rounded-lg shadow-sm text-sm transition-all">
                 Sĩ quan <span class="ml-1 px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-full text-xs">{{ tong_sq }}</span>
@@ -31,7 +30,6 @@
                 <input type="file" id="fileExcelSQ" name="fileExcel" accept=".xlsx, .xls">
             </form>
             
-            <!-- Nút Xóa Tất cả (Màu Đỏ) -->
             <button id="btnDeleteAll" class="flex items-center justify-center px-4 py-2 bg-white border border-rose-500 text-rose-600 font-semibold rounded-xl hover:bg-rose-50 shadow-sm transition-all text-sm gap-2" title="Xóa toàn bộ CSDL">
                 <i class="fa-solid fa-trash-can"></i> Xóa tất cả
             </button>
@@ -46,29 +44,34 @@
         </div>
     </div>
 
-    <!-- Bảng dữ liệu Thu gọn -->
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden relative">
-        <div class="overflow-x-auto relative max-w-full">
+    <!-- Bảng dữ liệu Thu gọn với Khóa Tiêu Đề (Sticky Header) -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm relative h-[calc(100vh-220px)] flex flex-col">
+        <div class="overflow-auto relative max-w-full h-full">
             <table class="w-full text-left border-collapse whitespace-nowrap">
-                <thead>
-                    <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 text-[11px] uppercase tracking-wider font-bold">
-                        <th class="px-4 py-3 w-10 text-center">STT</th>
-                        <th class="px-4 py-3 sticky left-0 bg-slate-50 shadow-[1px_0_0_0_#e2e8f0] z-20 min-w-[200px]">Họ và Tên</th>
-                        <th class="px-4 py-3 text-center">Hệ số CB</th>
-                        <th class="px-4 py-3 text-center">Hệ số CV</th>
-                        <th class="px-4 py-3">Đơn vị</th>
-                        <th class="px-4 py-3 text-center">Nhập ngũ</th>
-                        <th class="px-4 py-3 text-center">Trạng thái</th>
-                        <th class="px-4 py-3 text-right sticky right-0 bg-slate-50 shadow-[-1px_0_0_0_#e2e8f0] z-20">Thao tác</th>
+                
+                <thead class="sticky top-0 z-30">
+                    <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 text-[11px] uppercase tracking-wider font-bold shadow-sm">
+                        <th class="px-4 py-3 w-10 text-center bg-slate-50">STT</th>
+                        
+                        <!-- Cột neo góc trái-trên z-40 -->
+                        <th class="px-4 py-3 sticky left-0 top-0 bg-slate-50 shadow-[1px_0_0_0_#e2e8f0] z-40 min-w-[200px]">Họ và Tên</th>
+                        
+                        <th class="px-4 py-3 text-center bg-slate-50">Hệ số CB</th>
+                        <th class="px-4 py-3 text-center bg-slate-50">Hệ số CV</th>
+                        <th class="px-4 py-3 bg-slate-50">Đơn vị</th>
+                        <th class="px-4 py-3 text-center bg-slate-50">Nhập ngũ</th>
+                        <th class="px-4 py-3 text-center bg-slate-50">Trạng thái</th>
+                        
+                        <!-- Cột neo góc phải-trên z-40 -->
+                        <th class="px-4 py-3 text-right sticky right-0 top-0 bg-slate-50 shadow-[-1px_0_0_0_#e2e8f0] z-40">Thao tác</th>
                     </tr>
                 </thead>
+                
                 <tbody class="text-sm font-medium text-slate-700 divide-y divide-slate-100">
-                    
                     {% for sq in ds_sq %}
                     <tr class="hover:bg-slate-50/80 transition-colors group">
                         <td class="px-4 py-2 text-center text-slate-400 text-xs">{{ loop.index }}</td>
                         
-                        <!-- Cột Họ tên (Bỏ Icon, Tên đủ dài) -->
                         <td class="px-4 py-2 sticky left-0 bg-white group-hover:bg-slate-50 shadow-[1px_0_0_0_#f1f5f9] z-10 transition-colors">
                             <div class="flex flex-col">
                                 <p class="text-slate-800 font-bold text-sm">{{ sq.ho_ten }}</p>
@@ -76,7 +79,6 @@
                             </div>
                         </td>
                         
-                        <!-- Dùng "%g" để bỏ số 0 thập phân vô nghĩa (2.0 -> 2, 2.3 -> 2.3) -->
                         <td class="px-4 py-2 text-center text-slate-600 font-semibold">{{ "%g" % sq.cap_bac_hs }}</td>
                         <td class="px-4 py-2 text-center"><span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-xs font-bold">{{ "%g" % sq.chuc_vu_hs }}</span></td>
                         <td class="px-4 py-2 text-slate-600 text-xs">{{ sq.don_vi }}</td>
@@ -109,7 +111,6 @@
                         </td>
                     </tr>
                     {% endfor %}
-
                 </tbody>
             </table>
         </div>
@@ -117,5 +118,8 @@
 </div>
 
 {% include 'modals/modal_them_nhan_su.html' %}
+<!-- Nhúng thêm Modal Xử lý Trùng lặp -->
+{% include 'modals/modal_trung_lap.html' %}
+
 <script src="{{ url_for('static', filename='js/nhan_su.js') }}"></script>
 {% endblock %}

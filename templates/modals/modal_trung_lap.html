@@ -1,0 +1,49 @@
+<!-- ================= MODAL XỬ LÝ TRÙNG LẶP ================= -->
+<div id="modalTrungLap" class="fixed inset-0 z-[110] hidden">
+    <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm transition-opacity opacity-0" id="modalTrungLapBackdrop"></div>
+    
+    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+        <div id="modalTrungLapPanel" class="relative bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:max-w-4xl w-full opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95 border border-slate-200">
+            
+            <div class="bg-amber-50 px-6 py-4 border-b border-amber-200 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-amber-800 flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-600"></i> Phát hiện dữ liệu trùng lặp
+                </h3>
+                <button id="btnCloseTrungLap" class="text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg p-2 transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="px-6 py-5 bg-white max-h-[60vh] overflow-y-auto">
+                <p class="text-sm text-slate-600 mb-4">Các quân nhân dưới đây đã có trong CSDL. Vui lòng kiểm tra sự thay đổi của Hệ số/Đơn vị và xác nhận nếu bạn muốn cập nhật (ghi đè) dữ liệu mới nhất từ file Excel.</p>
+                
+                <table class="w-full text-left border-collapse whitespace-nowrap">
+                    <thead>
+                        <tr class="bg-slate-50 border-y border-slate-200 text-slate-500 text-[11px] uppercase tracking-wider font-bold">
+                            <th class="px-4 py-2">Họ và Tên</th>
+                            <th class="px-4 py-2">Đơn vị</th>
+                            <th class="px-4 py-2 text-center">Hệ số CB</th>
+                            <th class="px-4 py-2 text-center">Hệ số CV</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableTrungLapBody" class="text-sm text-slate-700 divide-y divide-slate-100">
+                        <!-- Dữ liệu sẽ được chèn qua Javascript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex justify-between items-center rounded-b-2xl">
+                <span id="txtTrungLapCount" class="text-sm font-semibold text-slate-500"></span>
+                <div class="flex gap-3">
+                    <button id="btnCancelTrungLap" class="px-5 py-2 bg-white border border-slate-200 text-slate-600 font-semibold rounded-xl hover:bg-slate-50 transition-all text-sm">
+                        Bỏ qua
+                    </button>
+                    <button id="btnConfirmUpdate" class="px-6 py-2 bg-amber-500 text-white font-semibold rounded-xl hover:bg-amber-600 shadow-md shadow-amber-500/20 transition-all text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-rotate"></i> Cập nhật (Ghi đè)
+                    </button>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
